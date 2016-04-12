@@ -1,4 +1,5 @@
 bs4
+_tkinter
 dj-database-url==0.4.0
 Django==1.9.2
 gunicorn==19.4.5
