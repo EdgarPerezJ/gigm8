@@ -1,5 +1,4 @@
 bs4
-Tkinter
 tkMessageBox
 dj-database-url==0.4.0
 Django==1.9.2
