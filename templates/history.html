@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" type="image/png" href="/static/images/favicon.png">
+        <title>GigM8</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">		
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="/static/css/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="/static/css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="/static/css/slider.css">
+        <!-- owl craousel css -->
+        <link rel="stylesheet" href="/static/css/owl.carousel.css">
+        <link rel="stylesheet" href="/static/css/owl.theme.css">
+        <link rel="stylesheet" href="/static/css/jquery.fancybox.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="/static/css/main.css">
+        <!-- responsive css -->
+        <link rel="stylesheet" href="/static/css/responsive.css">
+		<style>
+			html, body, #divMap {
+			  margin: 0;
+			  padding: 0;
+			  height: 300px;
+			}
+		</style>
+		<!-- jquery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="http://maps.googleapis.com/maps/api/js?sensor=false&extension=.js"
+			async defer></script>
+		<script>
+			$(document).ready(function() {
+				var map;
+				function initialize() {
+				  var mapOptions = {
+					zoom: 4,
+					center: new google.maps.LatLng(51.509802, -0.086692),
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				  };
+				  map = new google.maps.Map(document.getElementById('divMap'),
+											mapOptions);
+				}
+				google.maps.event.addDomListener(window, 'load', initialize);
+			});
+		</script>
+		
+    </head>
+    <body>				
+        <!--
+        ==================================================
+        Header Section Start
+        ================================================== -->
+        <header id="top-bar" class="navbar-fixed-top animated-header">
+            <div class="container">
+                <div class="navbar-header">
+                    <!-- responsive nav button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                    <!-- /responsive nav button -->
+                    
+                    <!-- logo -->
+                    <div class="navbar-brand">
+                        <a href="/index" >
+							<img src="/static/images/logo.png" alt="">
+                        </a>
+                    </div>
+                    <!-- /logo -->
+                </div>
+                <!-- main menu -->
+                <nav class="collapse navbar-collapse navbar-right" role="navigation">
+                    <div class="main-menu">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="/index" >Home</a>
+                            </li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- /main nav -->
+            </div>
+        </header>
+
+        <!-- 
+        ================================================== 
+            Open Map Streets for the history of past gigs
+        ================================================== -->
+        <section id="contact-section">
+            <div class="container">
+                <div class="row">                    
+                    <div class="col-md-12">
+						<div class="map-area">
+                            <h2 class="subtitle  wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".3s">History</h2>
+                            <p class="subtitle-des wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".5s">
+								Description
+                            </p>
+                            <div style="heigth: 400px; max-width: 1200px;" id="divMap">
+                            </div>
+                        </div>					
+                         
+                    </div>
+                </div>
+                <div class="row address-details">
+                    <div class="col-md-6">
+                        <div class="address wow fadeInLeft" data-wow-duration="500ms" data-wow-delay=".3s">
+                            <h5>Chart 1</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="address wow fadeInLeft" data-wow-duration="500ms" data-wow-delay=".5s">
+                            <h5>Chart 2</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+        ================================================== 
+            Footer Section Start
+        ================================================== -->
+        <footer id="footer">
+            <div class="container">
+                <div class="col-md-8">
+                    <p class="copyright">Copyright: <span>2015</span> . Design and Developed by <a href="http://www.Themefisher.com">Themefisher</a></p>
+                </div>
+                <div class="col-md-4">
+                    <!-- Social Media -->
+                    <ul class="social">
+                        <li>
+                            <a href="#" class="Facebook">
+                                <i class="ion-social-facebook"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="Twitter">
+                                <i class="ion-social-twitter"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="Linkedin">
+                                <i class="ion-social-linkedin"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="Google Plus">
+                                <i class="ion-social-googleplus"></i>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </footer> <!-- /#footer -->
+		
+		<!-- Template Javascript Files
+        ================================================== -->
+        <!-- modernizr js -->
+        <script src="/static/js/vendor/modernizr-2.6.2.min.js"></script>
+        
+        <!-- owl carouserl js -->
+        <script src="/static/js/owl.carousel.min.js"></script>
+        <!-- bootstrap js -->
+
+        <script src="/static/js/bootstrap.min.js"></script>
+        <!-- wow js -->
+        <script src="/static/js/wow.min.js"></script>
+        <!-- slider js -->
+        <script src="/static/js/slider.js"></script>
+        <script src="/static/js/jquery.fancybox.js"></script>
+        <!-- template main js -->
+        <script src="/static/js/main.js"></script>
+			
+    </body>
+</html>
+
+

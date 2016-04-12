@@ -1,0 +1,1 @@
+web: gunicorn gigm8.wsgi --log-file -
