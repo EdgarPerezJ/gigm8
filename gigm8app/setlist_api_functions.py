@@ -1,7 +1,7 @@
 # coding=utf-8
+from datetime import time
 import requests
 import json
-import time
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
