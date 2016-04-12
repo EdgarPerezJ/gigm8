@@ -21,7 +21,6 @@ def find(lst, key, value):
 
 """
 This function returns a URL to the lyrics
-
 Input:
     - artist: Artist name
     - song: Song name
@@ -39,7 +38,6 @@ def lyrics(artist, song):
 
 """
 This function returns a youtube video for a song by a group
-
 Input:
     - song: name of a song
     - art: name of song´s artist
@@ -61,9 +59,9 @@ def youtube_song(song, art):
         break
     return song_link
 
+
 """
 This function returns a youtube video for a song by a group WITH LYRICS
-
 Input:
     - song: name of a song
     - art: name of song´s artist
@@ -87,15 +85,56 @@ def youtube_song_lyrics(song, art):
 
 
 """
+Returns a list of the last 10 events´ venues info (only for the events that already have a setlist):
+{
+  "@id": "43d62307",
+  "@name": "Palacio de la Ópera",
+  "city": {
+    "@id": "3119841",
+    "@name": "Corunna",
+    "@state": "Galicia",
+    "@stateCode": "58",
+    "coords": {
+      "@lat": "43.371349638664",
+      "@long": "-8.39600086212158"
+    },
+    "country": {
+      "@code": "ES",
+      "@name": "Spain"
+    }
+}
+Input:
+    - mbid: musicbrainz id of an artist
+Output:
+    - A list of dictionaries
+"""
+
+
+def last_events_venues(mbid):
+    url = 'http://api.setlist.fm/rest/0.1/artist/' + mbid + '/setlists.json?p=1'
+    r = requests.get(url)
+    d = json.loads(r.text)
+    event_count = 10
+    event_list = []
+    setlists_list = d['setlists']['setlist']
+    for l in setlists_list:
+        if l['sets'] != "":
+            event_count -= 1
+            if event_count == -1:
+                break
+            event = l['venue']
+            event_list.append(event)
+    return event_list
+
+
+"""
 This function returns the most played encored songs
 by a group in their the last 20 concerts (sorted by frequency)
-
 Input:
     - armbid = artist musicbrainz id
 Output:
     - A list of dictionaries  [{'count': 1, 'name': 'song title'},...]
     - If there are no encore songs then: -1
-
 """
 
 
@@ -146,12 +185,10 @@ def popular_encored_songs(armbid):
 """
 This function returns a percentage of the concerts in which an artist
 played songs requested by the audience. (For last 20 concerts)
-
 Input:
     - armbid = artist musicbrainz id
 Output:
     - A percentage of the concerts with encored songs
-
 """
 
 
@@ -184,13 +221,11 @@ def concerts_with_encored_songs(armbid):
 
 """
 This function returns the album name to which a song belongs
-
 Input:
     - mbid = musicbrainz artist id
     - sn = song name
 Output:
     - Name of the album to which the song belongs to (and release date) {'album': 'album title', 'date': 'release date'}
-
 """
 
 
@@ -225,13 +260,11 @@ def album_of_song(mbid, sn):
 
 """
 This function returns the albums to which input songs are related to
-
 Input:
     - armbid = musicbrainz artist id
     - sl = list of song names
 Output:
     - [{'album': 'album name', 'songList': [song1, song2,...]},'percentage':''},...]
-
 """
 
 
@@ -254,6 +287,45 @@ def albums_of_songs(armbid, sl):
             f_l_size = len(f['songList'])
             f['percentage'] = round(f_l_size / float(sl_size), 2)
     return final_list
+
+
+"""
+Function that returns the musicbrainz id for a given name of an artist
+"""
+
+
+def get_artist_by_name(name):
+    url = 'http://musicbrainz.org/ws/2/artist/?query=artist:' + name + '&fmt=json'
+    r = requests.get(url)
+    d = json.loads(r.text)
+    if any('error' in e for e in d):
+        error = True
+        while error:
+            r = requests.get(url)
+            d = json.loads(r.text)
+            if not any('error' in e for e in d):
+                error = False
+    artists_list = d['artists']
+    return artists_list[0]['id']
+
+
+"""
+Function that returns musicbrainz info for a determined id
+"""
+
+
+def get_artist_info(mbid):
+    url = 'http://musicbrainz.org/ws/2/artist/' + mbid + '?fmt=json'
+    r = requests.get(url)
+    d = json.loads(r.text)
+    if any('error' in e for e in d):
+        error = True
+        while error:
+            r = requests.get(url)
+            d = json.loads(r.text)
+            if not any('error' in e for e in d):
+                error = False
+    return d
 
 
 """

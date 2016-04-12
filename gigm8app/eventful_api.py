@@ -85,5 +85,3 @@ def eventsByArtist(request):
             i += 1
     #In this particular search we retrieve artists and also events from those artists.
     return JsonResponse({"performer": performer, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events})
-
-
