@@ -9,6 +9,8 @@ from setlist_api_functions import popular_encored_songs
 from setlist_api_functions import youtube_song
 from setlist_api_functions import albums_of_songs
 from setlist_api_functions import get_most_played_songs_by_artist
+from eventful_api import getEventDetails
+from eventful_api import getEventsbyLocation
 import requests
 import json
 
@@ -62,36 +64,12 @@ IMAGE_SIZES = "large"
 
 #Script to get events by location search
 def EventsbyLocation(request,page):
-
-    location="Finland" #can be sent from frontend
-    pageNumber = page
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': location ,"within": 20, "unit": "km",
-               "category": "music", "sort_order": "popularity", "page_size": PAGE_SIZE,
-               "page_number": pageNumber, "image_sizes": IMAGE_SIZES}
-    r = requests.get('http://api.eventful.com/json/events/search', params=payload)
-    Json = r.json()
-    events = []
-    for i in range(0, len(Json['events']['event'])):
-        event = Json['events']['event'][i]
-        events.append({'id': event['id'],'title': event['title'],'url': event['url'], 'description': event['description'],
-                        'startTime': event['start_time'],'venueName': event['venue_name'], 'venueUrl': event['venue_url'],
-                        'startTime': event['start_time'], 'cityName' : event['city_name'], 'regionName': event['region_name'],
-                        'countryName': event['country_name'], 'image': event['image'], 'performers': event['performers']})
-        i += 1
-    data = {
-            "pageCount": int(Json["page_count"]), "totalItems": int(Json["total_items"]), "events": events
-        }
+    data=getEventsbyLocation(request,page)
     return HttpResponse(json.dumps(data))
+
+
 
 # gets the details of one specific event
 def EventDetails(request):
-    id="E0-001-091651819-5" #can be sent from frontend
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': id, "image_sizes": "large"}
-    r = requests.get('http://api.eventful.com/json/events/get', params=payload)
-    Json = r.json()
-    results=[]
-    results.append({'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']})
-    data={
-        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']['image']
-    }
+    data=getEventDetails(request)
     return HttpResponse(json.dumps(data))
