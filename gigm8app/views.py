@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import logging
 from setlist_api_functions import get_artist_by_name
+from setlist_api_functions import get_artist_info
+from setlist_api_functions import concerts_with_encored_songs
+from setlist_api_functions import popular_encored_songs
+from setlist_api_functions import youtube_song
 import requests
 import json
 
@@ -21,16 +25,18 @@ def history(request, artist_name):
     artist = artist_name.replace('_', ' ')
     artist_id = get_artist_by_name(artist)
     # Get info about the artist
-
+    info = get_artist_info(artist_id)
     # Get 10 most played songs
 
     # Get albums of the songs
 
     # Get percentage of events with encored songs
-
+    e_p = concerts_with_encored_songs(artist_id)*100
     # Get popular encored songs
-
-    data = {'artistInfo': {}, 'mostPlayed': [], 'encorePercentage': '', 'popularEncored': []}
+    p_e = popular_encored_songs(artist_id)
+    for s in p_e:
+        s['y'] = youtube_song(s['name'], artist_name)
+    data = {'artistInfo': info, 'mostPlayed': [], 'encorePercentage': e_p, 'popularEncored': p_e}
     return render(request, 'history.html', data)
 
 

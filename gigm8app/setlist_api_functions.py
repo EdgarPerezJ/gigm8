@@ -5,6 +5,7 @@ import json
 import logging
 import urllib
 import urllib2
+import unicodedata
 from bs4 import BeautifulSoup
 from countryList import country_list
 
@@ -51,11 +52,12 @@ Output:
 
 def youtube_song(song, art):
     text_to_search = song + ' ' + art
+    text_to_search = unicodedata.normalize('NFKD', text_to_search).encode('ascii', 'ignore')
     query = urllib.quote(text_to_search)
     url = "https://www.youtube.com/results?search_query=" + query
     response = urllib2.urlopen(url)
     html = response.read()
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "html.parser")
     song_link = ''
     for vid in soup.findAll(attrs={'class': 'yt-uix-tile-link'}):
         song_link = 'https://www.youtube.com' + vid['href']
@@ -75,11 +77,12 @@ Output:
 
 def youtube_song_lyrics(song, art):
     text_to_search = song + ' ' + art + ' lyrics'
+    text_to_search = unicodedata.normalize('NFKD', text_to_search).encode('ascii', 'ignore')
     query = urllib.quote(text_to_search)
     url = "https://www.youtube.com/results?search_query=" + query
     response = urllib2.urlopen(url)
     html = response.read()
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "html.parser")
     song_link = ''
     for vid in soup.findAll(attrs={'class': 'yt-uix-tile-link'}):
         song_link = 'https://www.youtube.com' + vid['href']
@@ -332,14 +335,17 @@ def get_artist_info(mbid):
                 error = False
     name = d['name']
     kind = d['type']
+    gender = ''
+    if kind == 'Person':
+        gender = d['gender']
     country_code = d['country']
     c_index = find(country_list, 'code', country_code)
     country = country_list[c_index]['name']
-    life_span = {'s': d['life-span']['begin'], 'e': d['life-span']['end']}
+    life_span = {'s': d['life-span']['begin'][:4], 'e': d['life-span']['end']}
     disambiguation = ''
     if any('disambiguation' in x for x in d):
         disambiguation = d['disambiguation']
-    artist_info = {'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation}
+    artist_info = {'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation, 'g': gender}
     return artist_info
 
 

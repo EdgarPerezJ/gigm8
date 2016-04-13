@@ -111,9 +111,24 @@
                 <div class="row">                    
                     <div class="col-md-12">
 						<div class="map-area">
-                            <h2 class="subtitle  wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".3s">History</h2>
+                            <h2 class="subtitle  wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".3s">{{ artistInfo.n }}</h2>
                             <p class="subtitle-des wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".5s">
-								Description
+								{% if artistInfo.type == 'Person' %}
+                                    A solo artist
+                                {% else %}
+                                    A band
+                                {% endif %}
+                                from {{ artistInfo.c }}, that started
+                                {% if artistInfo.type == 'Person' %}
+                                    {% if artistInfo.g == 'male' or artistInfo.g == 'Male'  %}
+                                        his
+                                    {% else %}
+                                        her
+                                    {% endif %}
+                                {% else %}
+                                    its
+                                {% endif %}
+                                career back in {{ artistInfo.life.s }}.
                             </p>
                             <div style="heigth: 400px; max-width: 1200px;" id="divMap">
                             </div>
@@ -124,12 +139,24 @@
                 <div class="row address-details">
                     <div class="col-md-6">
                         <div class="address wow fadeInLeft" data-wow-duration="500ms" data-wow-delay=".3s">
-                            <h5>Chart 1</h5>
+                            <h3>10 Most Played Songs</h3>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="address wow fadeInLeft" data-wow-duration="500ms" data-wow-delay=".5s">
-                            <h5>Chart 2</h5>
+                            <h3>Popular Encored songs</h3>
+                            <h5> Concerts with encored songs: {{ encorePercentage }}%</h5>
+                            <ol>
+                                {% for es in popularEncored %}
+                                <li>
+                                    {{ es.name }}
+                                    <a target="_blank" href={{ es.y }}>
+                                            <i class="ion-ios-play-outline"
+                                               style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ol>
                         </div>
                     </div>
                 </div>
