@@ -1,5 +1,4 @@
 # coding=utf-8
-from datetime import time
 import requests
 import json
 import logging
@@ -7,6 +6,7 @@ import urllib
 import urllib2
 import unicodedata
 from bs4 import BeautifulSoup
+import time
 from countryList import country_list
 
 """
@@ -256,6 +256,8 @@ def album_of_song(mbid, sn):
                         if not any('secondary-types' in s for s in rel['release-group']):
                             if len(rel['date']) == 4:
                                 new_date = time.strptime(str(rel['date']), "%Y")
+                            elif len(rel['date']) == 7:
+                                new_date = time.strptime(str(rel['date']), "%Y-%m")
                             else:
                                 new_date = time.strptime(str(rel['date']), "%Y-%m-%d")
                             if new_date < final['date']:

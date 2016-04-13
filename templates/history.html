@@ -140,6 +140,17 @@
                     <div class="col-md-6">
                         <div class="address wow fadeInLeft" data-wow-duration="500ms" data-wow-delay=".3s">
                             <h3>10 Most Played Songs</h3>
+                            <ol>
+                                {% for ps in mostPlayed %}
+                                <li>
+                                    {{ ps.n }}
+                                    <a target="_blank" href={{ ps.y }}>
+                                            <i class="ion-ios-play-outline"
+                                               style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ol>
                         </div>
                     </div>
                     <div class="col-md-6">
