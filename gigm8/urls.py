@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^location/(?P<page>\d+)/', views.EventsbyLocation),
     url(r'^Details/', views.details),
     url(r'^getdetails/(?P<id>[\w{}.-]{1,40})/$', views.EventDetails),
-    url(r'^geolocation/', eventful_api.eventsByGeolocation),
+    url(r'^events_geolocation/(?P<latitude>\-?\d*\.?\d+)/(?P<longitude>\-?\d*\.?\d+)/(?P<page>\d+)', views.events_by_geolocation),
     url(r'^artistName/', eventful_api.eventsByArtist),
     url(r'^admin/', include(admin.site.urls)),
 ]

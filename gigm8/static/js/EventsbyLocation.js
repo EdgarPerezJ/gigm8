@@ -8,13 +8,40 @@
 $(document).ready(function () {
     //Initialize the page
     loadSearchOptions();
-    var page = getParameterByName('page')
-    if(page !== null) {
-        getEventsbyLocation(page, true)
-    }else{
-        getEventsbyLocation(1, true)
+    //Binds the click event for the search button
+    $("#btnSearch").click(function(){
+        searchEvents();
+    });
+    //By default search by geoLocation
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(setGeolocation);
+    } else {
+        //Geolocation not supported.
     }
 });
+
+/**
+ * Function that triggers the search and validates that the users selects a type and provides and input.
+ */
+function searchEvents(){
+    var typeSearch = $('.input-group #searchBy').val();
+    if(typeSearch === "" || typeSearch === null){
+        console.log("No type of serach defined");
+        return;
+    }
+    var inputSearch = $("#txtSearchInput").val();
+    if(inputSearch === "" || inputSearch === null){
+        console.log("No input search provided");
+        return;
+    }
+    if(typeSearch === "byCity"){
+        //Look for location. Pass the input search param.
+        getEventsbyLocation(1, true);
+    }
+    else if(typeSearch === "byArtist"){
+        //Look for artist and it's events.
+    }
+}
 
 /**
  * Function that initializes the search options drop down list
@@ -29,14 +56,38 @@ function loadSearchOptions(){
     });
 }
 
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+/**
+* Function to get the events by place
+* @param page Number representing the page to get from the API
+ * @param isPaginatorInit True is the paginator needs to be initialized
+*/
+function getEventsbyLocation(page, isPaginatorInit) {
+    //Clean the container
+    var container = $("#eventsResult");
+    $("#txtTypeSearch").val("location");
+    container.empty();
+    $.ajax({
+        type: "GET",
+        url: "/location/" + page,
+        dataType: 'json',
+        data: JSON.stringify({})
+    })
+    // this is a callback function which is triggered when the request has completed and appends the data to the row div
+    .done(function (data) {
+        renderEvents(data, isPaginatorInit);
+    });
+}
+
+/**
+ * Sets the position for future use
+ * @param position object with the geolocation information
+ */
+function setGeolocation(position){
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    $("#txtLatitude").val(latitude);
+    $("#txtLongitude").val(longitude);
+    getEventsByGeolocation(1, true);
 }
 
 /**
@@ -44,84 +95,105 @@ function getParameterByName(name, url) {
 * @param page Number representing the page to get from the API
  * @param isPaginatorInit True is the paginator needs to be initialized
 */
-function getEventsbyLocation(page, isPaginatorInit){
+function getEventsByGeolocation(page, isPaginatorInit) {
     //Clean the container
     var container = $("#eventsResult");
     container.empty();
+    var latitude = $("#txtLatitude").val();
+    var longitude = $("#txtLongitude").val();
+    $("#txtTypeSearch").val("geolocation");
     $.ajax({
-      type: "GET",
-      url: "/location/"+page,
-      dataType: 'json',
-      data: JSON.stringify({})
+        type: "GET",
+        url: "/events_geolocation/" + latitude + "/" + longitude + "/" +page,
+        dataType: 'json',
+        data: JSON.stringify({})
     })
     // this is a callback function which is triggered when the request has completed and appends the data to the row div
-    .done(function( data ) {
-        var events = data['events']
-        var pageCount = data['pageCount']
-        var newRow = true;
-        for (var i=0; i < events.length; i++){
-            var imagesrc = "";
-            if(events[i].image !== null)
-            {
-                imagesrc = events[i].image.large.url
-            }else{
-                imagesrc = '/static/images/portfolio/muse.jpg'
-            }
-            if(newRow){
-                container.append('<div class="row">');
-                newRow = false;
-            }
-            container.append(
-                 ' <div class="col-sm-3" >'+
-                      '<figure class="wow fadeInLeft animated portfolio-item" data-wow-duration="500ms" data-wow-delay="0ms">'+
-                         ' <div class="img-wrapper">'+
-                           ' <img src="'+imagesrc+'" class="img-responsive" alt="" >'+
-                            '<div class="overlay">'+
-                               ' <div class="buttons">'+
-                                    '<a href="/history">History</a>'+
-                                    ' <a id="open"  href="/Details/?id='+events[i].id +'">Details</a>'+
-                               ' </div>'+
-                            '</div>'+
-                       ' </div>'+
-                        '<figcaption>'+
-                        '<h4>'+
-                           ' <a href="#">'+
-                             events[i].title+
-                            ' </a>'+
-                       ' </h4>'+
-                       ' <p>' + events[i].cityName +'<br/>'+ events[i].startTime+
-
-                       '</p>'+
-                        '<p>'+ events[i].venueName+
-                                 '</p>'+
-                      ' </figcaption>'+
-                     '</figure>'+
-                '</div>'
-            );
-            if((i+1)%4 == 0){
-                container.append('</div>');
-                newRow = true;
-            }
-        }
-
-        //Call the initialization of the paginator
-        if(isPaginatorInit){
-            initializePaginator(pageCount);
-        }
+    .done(function (data) {
+        renderEvents(data, isPaginatorInit);
     });
+}
 
-    /**
-     * Function to initialize the paginator
-     * @param totalPages Number representing the total of pages of the search
-     */
-    function initializePaginator(totalPages){
-        $('#paginator').twbsPagination({
-            totalPages: totalPages,
-            visiblePages: 5,
-            initiateStartPageClick: false,
-            onPageClick: function (event, page) {
+/**
+ * Function that renders the events retrieves as a result of the search
+ * @param data Json containing the events
+ * @param isPaginatorInit True if the paginator needs to be initialized
+ */
+function renderEvents(data, isPaginatorInit){
+    var container = $("#eventsResult");
+    var events = data['events'];
+    var pageCount = data['pageCount'];
+    var newRow = true;
+    for (var i=0; i < events.length; i++){
+        var imagesrc = "";
+        if(events[i].image !== null)
+        {
+            imagesrc = events[i].image.large.url
+        }else{
+            imagesrc = '/static/images/portfolio/muse.jpg'
+        }
+        if(newRow){
+            container.append('<div class="row">');
+            newRow = false;
+        }
+        container.append(
+             ' <div class="col-sm-3" >'+
+                  '<figure class="wow fadeInLeft animated portfolio-item" data-wow-duration="500ms" data-wow-delay="0ms">'+
+                     ' <div class="img-wrapper">'+
+                       ' <img src="'+imagesrc+'" class="img-responsive" alt="" >'+
+                        '<div class="overlay">'+
+                           ' <div class="buttons">'+
+                                '<a href="/history">History</a>'+
+                                ' <a href="">Details</a>'+
+                           ' </div>'+
+                        '</div>'+
+                   ' </div>'+
+                    '<figcaption>'+
+                    '<h4>'+
+                       ' <a href="#">'+
+                         events[i].title+
+                        ' </a>'+
+                   ' </h4>'+
+                   ' <p>' + events[i].cityName +'<br/>'+ events[i].startTime+
+                   '</p>'+
+                    '<p>'+ events[i].venueName+
+                             '</p>'+
+                  ' </figcaption>'+
+                 '</figure>'+
+            '</div>'
+        );
+        if((i+1)%4 == 0){
+            container.append('</div>');
+            newRow = true;
+        }
+    }
+    //Call the initialization of the paginator
+    if(isPaginatorInit){
+        initializePaginator(pageCount);
+    }
+}
+
+/**
+ * Function to initialize the paginator
+ * @param totalPages Number representing the total of pages of the search
+ */
+function initializePaginator(totalPages){
+    $('#paginator').twbsPagination({
+        totalPages: totalPages,
+        visiblePages: 5,
+        initiateStartPageClick: false,
+        onPageClick: function (event, page) {
+            var typeSearch = $("#txtTypeSearch").val();
+            if(typeSearch === "location"){
                 getEventsbyLocation(page, false);
             }
-        });
-    }
+            else if(typeSearch === "geolocation"){
+                getEventsByGeolocation(page, false);
+            }
+            else{
+                //This should be the function to get events by Artists
+            }
+
+        }
+    });
 }

@@ -11,6 +11,10 @@ logger = logging.getLogger("GigM8")
 PAGE_SIZE = 12
 #Comma separated list of the desired sizes of the images
 IMAGE_SIZES = "large"
+#Distance within the search will be done when using geolocation
+WITHIN_DISTANCE = 20
+#Unit of the distance
+UNIT_DISTANCE = "km"
 
 ##Script to get events by location search
 def getEventsbyLocation(request,page):
@@ -47,12 +51,10 @@ def getEventDetails(request,id):
     return data
 
 #Get the events by the geolocation
-def eventsByGeolocation(request):
-    coordinates = "50.9377596,-1.376547"
-    pageNumber = 1
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': coordinates, "within": 20, "unit": "km",
+def get_events_geolocation(coordinates, page_number):
+    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': coordinates, "within": WITHIN_DISTANCE, "unit": UNIT_DISTANCE,
                "category": "music", "sort_order": "popularity", "page_size": PAGE_SIZE,
-               "page_number": pageNumber, "image_sizes": IMAGE_SIZES}
+               "page_number": page_number, "image_sizes": IMAGE_SIZES}
     r = requests.get('http://api.eventful.com/json/events/search', params=payload)
     json = r.json()
     events = []
@@ -63,7 +65,7 @@ def eventsByGeolocation(request):
                         'startTime': event['start_time'], 'cityName' : event['city_name'], 'regionName': event['region_name'],
                         'countryName': event['country_name'], 'image': event['image'], 'performers': event['performers']})
         i += 1
-    return JsonResponse({"pageCount": int(json["page_count"]), "totalItems": int(json["total_items"]), "events": events})
+    return {"pageCount": int(json["page_count"]), "totalItems": int(json["total_items"]), "events": events}
 
 #Get the events by artist
 def eventsByArtist(request):

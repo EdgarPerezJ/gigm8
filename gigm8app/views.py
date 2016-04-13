@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import logging
 import unicodedata
 from setlist_api_functions import get_artist_by_name
@@ -7,12 +7,11 @@ from setlist_api_functions import get_artist_info
 from setlist_api_functions import concerts_with_encored_songs
 from setlist_api_functions import popular_encored_songs
 from setlist_api_functions import youtube_song
-from setlist_api_functions import albums_of_songs
 from setlist_api_functions import get_most_played_songs_by_artist
 from eventful_api import getEventDetails
 from eventful_api import getEventsbyLocation
-import requests
 import json
+import eventful_api
 
 # Get an instance of a logger
 logger = logging.getLogger("GigM8")
@@ -55,13 +54,6 @@ def history(request, artist_name):
     data = {'artistInfo': info, 'mostPlayed': m_p_d, 'albums': [], 'encorePercentage': e_p, 'popularEncored': p_e}
     return render(request, 'history.html', data)
 
-
-
-#Size of the pages on each search of the API
-PAGE_SIZE = 12
-#Comma separated list of the desired sizes of the images
-IMAGE_SIZES = "large"
-
 #Script to get events by location search
 def EventsbyLocation(request,page):
     data=getEventsbyLocation(request,page)
@@ -73,3 +65,9 @@ def EventsbyLocation(request,page):
 def EventDetails(request,id):
     data=getEventDetails(request,id)
     return HttpResponse(json.dumps(data))
+
+#gets the events by geolocation
+def events_by_geolocation(request, latitude, longitude, page):
+    geolocation = latitude +","+longitude
+    info = eventful_api.get_events_geolocation(geolocation, page)
+    return JsonResponse(info)
