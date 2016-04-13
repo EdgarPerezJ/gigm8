@@ -29,12 +29,17 @@ function getEventsDetails(id){
     // this is a callback function which is triggered when the request has completed and appends the data to the row div
     .done(function( data ) {
 
-         var imagesrc = "";
+          var imagesrc = "";
             if(data['image']!== null)
             {    var images = data['image']['image']
-                 for (var i=0; i < images.length; i++){
+                 if(images.length>1){
+                     for (var i=0; i < images.length; i++){
                      imagesrc=images[1]['large']['url']
+                     }
+                 }else{
+                     imagesrc=images['large']['url']
                  }
+
             }else{
                 imagesrc = '/static/images/portfolio/muse.jpg'
             }
