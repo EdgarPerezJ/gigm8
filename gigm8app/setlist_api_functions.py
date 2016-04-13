@@ -379,13 +379,13 @@ def getArtistsByName(artistName):
 """
 Get a list of 10 most played songs ordered by frequency
 Input:
-    artist musicbrainzid
+    artist musicbrainz id
 Output:
     - a dict of songs
 """
 
 
-def getMostPlayedSongsByArtist(mbid):
+def get_most_played_songs_by_artist(mbid):
     url2 = 'http://api.setlist.fm/rest/0.1/artist/' + mbid + '/setlists.json?p=1'
     r2 = requests.get(url2)
     d2 = json.loads(r2.text)
