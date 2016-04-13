@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import logging
 from setlist_api_functions import get_artist_by_name
 import requests
 import json
 
+# Get an instance of a logger
+logger = logging.getLogger("GigM8")
 
 def index(request):
+    logger.debug("*********Into index View*******")
     return render(request, 'index.html')
 
 

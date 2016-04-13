@@ -2,6 +2,7 @@
 from datetime import time
 import requests
 import json
+import logging
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
@@ -10,6 +11,8 @@ from bs4 import BeautifulSoup
 Function that finds index of a dictionary in a list that contains the key with a certain value
 """
 
+# Get an instance of a logger
+logger = logging.getLogger("GigM8")
 
 def find(lst, key, value):
     for i, dic in enumerate(lst):
@@ -351,7 +354,7 @@ def getArtistsByName(artistName):
         artistType = artist['type'] if any('type' in d for d in artist) else "No Info"
         id = artist['id'] if any('id' in d for d in artist) else "No Info"
         outputInfo = outputInfo + name + "," + country + "," + disambiguation + "," + gender + "," + artistType + "," + id + "\n"
-
+    logging.debug(outputInfo)
 
 
 """
@@ -388,3 +391,4 @@ def getMostPlayedSongsByArtist(mbid):
 
     dict2 = sorted(dict2.items(), key=lambda x: x[1])
     dict2.reverse()
+    logging.debug(outputInfo)
