@@ -6,6 +6,7 @@ import logging
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
+from countryList import country_list
 
 """
 Function that finds index of a dictionary in a list that contains the key with a certain value
@@ -313,6 +314,8 @@ def get_artist_by_name(name):
 
 """
 Function that returns musicbrainz info for a determined id
+ - Input: musicbrainz artist id
+ - Output: name, type, life-span, country and disambiguation
 """
 
 
@@ -327,7 +330,17 @@ def get_artist_info(mbid):
             d = json.loads(r.text)
             if not any('error' in e for e in d):
                 error = False
-    return d
+    name = d['name']
+    kind = d['type']
+    country_code = d['country']
+    c_index = find(country_list, 'code', country_code)
+    country = country_list[c_index]['name']
+    life_span = {'s': d['life-span']['begin'], 'e': d['life-span']['end']}
+    disambiguation = ''
+    if any('disambiguation' in x for x in d):
+        disambiguation = d['disambiguation']
+    artist_info = {'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation}
+    return artist_info
 
 
 """
