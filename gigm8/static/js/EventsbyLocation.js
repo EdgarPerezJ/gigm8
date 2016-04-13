@@ -79,7 +79,7 @@ function getEventsbyLocation(page, isPaginatorInit){
                             '<div class="overlay">'+
                                ' <div class="buttons">'+
                                     '<a href="/history">History</a>'+
-                                    ' <a href="">Details</a>'+
+                                    ' <a id="open"  href="/Details/?id='+events[i].id +'">Details</a>'+
                                ' </div>'+
                             '</div>'+
                        ' </div>'+
@@ -90,6 +90,7 @@ function getEventsbyLocation(page, isPaginatorInit){
                             ' </a>'+
                        ' </h4>'+
                        ' <p>' + events[i].cityName +'<br/>'+ events[i].startTime+
+
                        '</p>'+
                         '<p>'+ events[i].venueName+
                                  '</p>'+
@@ -102,6 +103,7 @@ function getEventsbyLocation(page, isPaginatorInit){
                 newRow = true;
             }
         }
+
         //Call the initialization of the paginator
         if(isPaginatorInit){
             initializePaginator(pageCount);

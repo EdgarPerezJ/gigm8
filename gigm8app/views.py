@@ -70,6 +70,6 @@ def EventsbyLocation(request,page):
 
 
 # gets the details of one specific event
-def EventDetails(request):
-    data=getEventDetails(request)
+def EventDetails(request,id):
+    data=getEventDetails(request,id)
     return HttpResponse(json.dumps(data))

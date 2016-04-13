@@ -3,16 +3,26 @@
  */
 $(document).ready(function () {
     //Initialize the page
-     getEventsDetails()
+    var id = getParameterByName('id')
+     getEventsDetails(id)
 
 });
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
-function getEventsDetails(){
+function getEventsDetails(id){
     //Clean the container
     var container = $("#details");
     $.ajax({
       type: "GET",
-      url: "/getdetails/",
+      url: "/getdetails/"+id,
       dataType: 'json',
       data: JSON.stringify({})
     })
@@ -21,7 +31,7 @@ function getEventsDetails(){
 
          var imagesrc = "";
             if(data['image']!== null)
-            {    var images = data['image']
+            {    var images = data['image']['image']
                  for (var i=0; i < images.length; i++){
                      imagesrc=images[1]['large']['url']
                  }

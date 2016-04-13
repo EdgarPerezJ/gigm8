@@ -36,15 +36,13 @@ def getEventsbyLocation(request,page):
     return data
 
 # gets the details of one specific event
-def getEventDetails(request):
-    id="E0-001-091651819-5" #can be sent from frontend
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': id, "image_sizes": "large"}
+def getEventDetails(request,id):
+    eveid=id
+    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': eveid, "image_sizes": "large"}
     r = requests.get('http://api.eventful.com/json/events/get', params=payload)
     Json = r.json()
-    results=[]
-    results.append({'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']})
     data={
-        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']['image']
+        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']
     }
     return data
 
