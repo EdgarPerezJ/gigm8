@@ -23,6 +23,9 @@ def index(request):
 def events(request):
     return render(request, 'events.html')
 
+def details(request):
+    return render(request, 'details.html')
+
 
 def history(request, artist_name):
     artist = artist_name.replace('_', ' ')
@@ -78,4 +81,17 @@ def EventsbyLocation(request,page):
     data = {
             "pageCount": int(Json["page_count"]), "totalItems": int(Json["total_items"]), "events": events
         }
+    return HttpResponse(json.dumps(data))
+
+# gets the details of one specific event
+def EventDetails(request):
+    id="E0-001-091651819-5" #can be sent from frontend
+    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': id, "image_sizes": "large"}
+    r = requests.get('http://api.eventful.com/json/events/get', params=payload)
+    Json = r.json()
+    results=[]
+    results.append({'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']})
+    data={
+        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']['image']
+    }
     return HttpResponse(json.dumps(data))

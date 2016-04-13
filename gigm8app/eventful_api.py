@@ -32,13 +32,13 @@ def EventsbyLocation(request):
 
 # gets the details of one specific event
 def EventDetails(request):
-    id="E0-001-091257098-4" #can be sent from frontend
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': id}
+    id="E0-001-087782406-3" #can be sent from frontend
+    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': id,"image_sizes": "large"}
     r = requests.get('http://api.eventful.com/json/events/get', params=payload)
     json = r.json()
     results=[]
     results.append({'title':json['title'],'description':json['description']})
-    return HttpResponse(results)
+    return JsonResponse(json)
 
 #Get the events by the geolocation
 def eventsByGeolocation(request):
