@@ -5,7 +5,6 @@ import json
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
-import tkMessageBox
 
 """
 Function that finds index of a dictionary in a list that contains the key with a certain value
@@ -352,7 +351,7 @@ def getArtistsByName(artistName):
         artistType = artist['type'] if any('type' in d for d in artist) else "No Info"
         id = artist['id'] if any('id' in d for d in artist) else "No Info"
         outputInfo = outputInfo + name + "," + country + "," + disambiguation + "," + gender + "," + artistType + "," + id + "\n"
-    tkMessageBox.showinfo(title="Greetings", message=outputInfo)
+
 
 
 """
@@ -389,4 +388,3 @@ def getMostPlayedSongsByArtist(mbid):
 
     dict2 = sorted(dict2.items(), key=lambda x: x[1])
     dict2.reverse()
-    tkMessageBox.showinfo(title="Greetings", message=outputInfo)
