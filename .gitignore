@@ -17,3 +17,7 @@ gigm8app/views.pyc
 gigm8app/eventful_api.pyc
 gigm8.log
 .idea/workspace.xml
+*.name
+.idea/gigm8.iml
+*.xml
+*.pyc
