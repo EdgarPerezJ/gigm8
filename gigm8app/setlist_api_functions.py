@@ -410,4 +410,4 @@ def getMostPlayedSongsByArtist(mbid):
 
     dict2 = sorted(dict2.items(), key=lambda x: x[1])
     dict2.reverse()
-    logging.debug(outputInfo)
+    return dict2
