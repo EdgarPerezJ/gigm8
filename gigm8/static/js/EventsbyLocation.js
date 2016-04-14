@@ -217,7 +217,9 @@ function renderEvents(data, isPaginatorInit){
  * @param totalPages Number representing the total of pages of the search
  */
 function initializePaginator(totalPages){
-
+    if($('#paginator').data("twbs-pagination")){
+        $('#paginator').twbsPagination('destroy');
+    }
     $('#paginator').twbsPagination({
         totalPages: totalPages,
         visiblePages: 5,
