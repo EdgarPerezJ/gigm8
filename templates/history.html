@@ -118,17 +118,23 @@
                                 {% else %}
                                     A band
                                 {% endif %}
-                                from {{ artistInfo.c }}, that started
-                                {% if artistInfo.type == 'Person' %}
-                                    {% if artistInfo.g == 'male' or artistInfo.g == 'Male'  %}
-                                        his
-                                    {% else %}
-                                        her
-                                    {% endif %}
-                                {% else %}
-                                    its
+                                {% if artistInfo.c %}
+                                    from {{ artistInfo.c }}
                                 {% endif %}
-                                career back in {{ artistInfo.life.s }}.
+                                {% if artistInfo.life %}
+                                    , that started
+                                    {% if artistInfo.type == 'Person' %}
+                                        {% if artistInfo.g == 'male' or artistInfo.g == 'Male'  %}
+                                            his
+                                        {% else %}
+                                            her
+                                        {% endif %}
+                                    {% else %}
+                                        its
+                                    {% endif %}
+                                    career back in {{ artistInfo.life.s }}
+                                {% endif %}
+
                             </p>
                             <div style="heigth: 400px; max-width: 1200px;" id="divMap">
                             </div>
@@ -151,6 +157,17 @@
                                 </li>
                                 {% endfor %}
                             </ol>
+                            <h4>Albums Information</h4>
+                            <ul>
+                                {% for a in albums %}
+                                    <li>{{ a.album }} {{ a.percentage }}%</li>
+                                    <ul style="color:green;">
+                                    {% for s in a.songList %}
+                                        <li>{{ s }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -158,15 +175,17 @@
                             <h3>Popular Encored songs</h3>
                             <h5> Concerts with encored songs: {{ encorePercentage }}%</h5>
                             <ol>
-                                {% for es in popularEncored %}
-                                <li>
-                                    {{ es.name }}
-                                    <a target="_blank" href={{ es.y }}>
-                                            <i class="ion-ios-play-outline"
-                                               style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
-                                    </a>
-                                </li>
-                                {% endfor %}
+                                {% if popularEncored %}
+                                    {% for es in popularEncored %}
+                                    <li>
+                                        {{ es.name }}
+                                        <a target="_blank" href={{ es.y }}>
+                                                <i class="ion-ios-play-outline"
+                                                   style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                {% endif %}
                             </ol>
                         </div>
                     </div>

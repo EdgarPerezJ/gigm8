@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import logging
 import unicodedata
-from setlist_api_functions import get_artist_by_name
+from setlist_api_functions import get_artist_by_name, albums_of_songs
 from setlist_api_functions import get_artist_info
 from setlist_api_functions import concerts_with_encored_songs
 from setlist_api_functions import popular_encored_songs
@@ -44,14 +44,17 @@ def history(request, artist_name):
     for s in m_p:
         m_p_d.append({'n': s, 'y': youtube_song(s, artist_name)})
     # Get albums of the songs
-    # a_s = albums_of_songs(artist_id, m_p)
+    a_s = albums_of_songs(artist_id, m_p)
     # Get percentage of events with encored songs
     e_p = concerts_with_encored_songs(artist_id)*100
     # Get popular encored songs
     p_e = popular_encored_songs(artist_id)
-    for s in p_e:
-        s['y'] = youtube_song(s['name'], artist_name)
-    data = {'artistInfo': info, 'mostPlayed': m_p_d, 'albums': [], 'encorePercentage': e_p, 'popularEncored': p_e}
+    if p_e == -1:
+        p_e = False
+    else:
+        for s in p_e:
+            s['y'] = youtube_song(s['name'], artist_name)
+    data = {'artistInfo': info, 'mostPlayed': m_p_d, 'albums': a_s, 'encorePercentage': e_p, 'popularEncored': p_e}
     return render(request, 'history.html', data)
 
 #Script to get events by location search

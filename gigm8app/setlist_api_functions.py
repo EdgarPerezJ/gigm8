@@ -251,18 +251,19 @@ def album_of_song(mbid, sn):
     for rec in d['recordings']:
         if any('releases' in r for r in rec):
             for rel in rec['releases']:
-                if any('status' in g for g in rel):
-                    if rel['status'] == 'Official':
-                        if not any('secondary-types' in s for s in rel['release-group']):
-                            if len(rel['date']) == 4:
-                                new_date = time.strptime(str(rel['date']), "%Y")
-                            elif len(rel['date']) == 7:
-                                new_date = time.strptime(str(rel['date']), "%Y-%m")
-                            else:
-                                new_date = time.strptime(str(rel['date']), "%Y-%m-%d")
-                            if new_date < final['date']:
-                                final['date'] = new_date
-                                final['album'] = rel['title']
+                if any('date' in x for x in rel):
+                    if any('status' in g for g in rel):
+                        if rel['status'] == 'Official':
+                            if not any('secondary-types' in s for s in rel['release-group']):
+                                if len(rel['date']) == 4:
+                                    new_date = time.strptime(str(rel['date']), "%Y")
+                                elif len(rel['date']) == 7:
+                                    new_date = time.strptime(str(rel['date']), "%Y-%m")
+                                else:
+                                    new_date = time.strptime(str(rel['date']), "%Y-%m-%d")
+                                if new_date < final['date']:
+                                    final['date'] = new_date
+                                    final['album'] = rel['title']
     return final
 
 
@@ -281,6 +282,8 @@ def albums_of_songs(armbid, sl):
     sl_size = len(sl)
     for s in sl:
         album = album_of_song(armbid, s)['album']
+        if album == '':
+            album = 'Other'
         if len(final_list) == 0:
             aux = {'album': album, 'songList': [s], 'percentage': 0}
             final_list.append(aux)
@@ -293,7 +296,9 @@ def albums_of_songs(armbid, sl):
                 final_list[album_index]['songList'].append(s)
         for f in final_list:
             f_l_size = len(f['songList'])
-            f['percentage'] = round(f_l_size / float(sl_size), 2)
+            f['percentage'] = round(f_l_size / float(sl_size), 2)*100
+    final_list = sorted(final_list, key=lambda k: k['percentage'])
+    final_list = final_list[::-1]
     return final_list
 
 
@@ -340,11 +345,16 @@ def get_artist_info(mbid):
     gender = ''
     if kind == 'Person':
         gender = d['gender']
-    country_code = d['country']
-    c_index = find(country_list, 'code', country_code)
-    country = country_list[c_index]['name']
-    life_span = {'s': d['life-span']['begin'][:4], 'e': d['life-span']['end']}
-    disambiguation = ''
+    country = False
+    if d['country'] is not None:
+        country_code = d['country']
+        c_index = find(country_list, 'code', country_code)
+        country = country_list[c_index]['name']
+    life_span = False
+    if any('life-span' in x for x in d):
+        if d['life-span']['begin'] is not None:
+            life_span = {'s': d['life-span']['begin'][:4], 'e': d['life-span']['end']}
+    disambiguation = False
     if any('disambiguation' in x for x in d):
         disambiguation = d['disambiguation']
     artist_info = {'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation, 'g': gender}
