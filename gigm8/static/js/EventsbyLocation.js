@@ -136,6 +136,8 @@ function renderEvents(data, isPaginatorInit){
             container.append('<div class="row">');
             newRow = false;
         }
+        var nameHistory = events[i].title;
+        nameHistory = nameHistory.replace(" ", "_").toLocaleLowerCase();
         container.append(
              ' <div class="col-sm-3" >'+
                   '<figure class="wow fadeInLeft animated portfolio-item" data-wow-duration="500ms" data-wow-delay="0ms">'+
@@ -143,15 +145,15 @@ function renderEvents(data, isPaginatorInit){
                        ' <img src="'+imagesrc+'" class="img-responsive" alt="" >'+
                         '<div class="overlay">'+
                            ' <div class="buttons">'+
-                                '<a href="/history">History</a>'+
-                                ' <a href="">Details</a>'+
+                                '<a href="/history/' + nameHistory + '">History</a>'+
+                                ' <a id="open"  href="/Details/?id='+events[i].id +'">Details</a>'+
                            ' </div>'+
                         '</div>'+
                    ' </div>'+
                     '<figcaption>'+
                     '<h4>'+
                        ' <a href="#">'+
-                         events[i].title+
+                         events[i].title +
                         ' </a>'+
                    ' </h4>'+
                    ' <p>' + events[i].cityName +'<br/>'+ events[i].startTime+
