@@ -60,10 +60,20 @@ def get_events_geolocation(coordinates, page_number):
     events = []
     for i in range(0, len(json['events']['event'])):
         event = json['events']['event'][i]
+        performers = []
+        if(event['performers'] != None):
+            if(isinstance(event['performers']['performer'], list)):
+                for j in range(0, len(event['performers']['performer'])):
+                    performers.append(event['performers']['performer'][j])
+                    j += 1
+            else:
+                performers.append(event['performers']['performer'])
+        else:
+            performers.append(event['performers'])
         events.append({'id': event['id'],'title': event['title'],'url': event['url'], 'description': event['description'],
                         'startTime': event['start_time'],'venueName': event['venue_name'], 'venueUrl': event['venue_url'],
                         'startTime': event['start_time'], 'cityName' : event['city_name'], 'regionName': event['region_name'],
-                        'countryName': event['country_name'], 'image': event['image'], 'performers': event['performers']})
+                        'countryName': event['country_name'], 'image': event['image'], 'performers': performers})
         i += 1
     return {"pageCount": int(json["page_count"]), "totalItems": int(json["total_items"]), "events": events}
 

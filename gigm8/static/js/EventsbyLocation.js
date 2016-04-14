@@ -136,8 +136,22 @@ function renderEvents(data, isPaginatorInit){
             container.append('<div class="row">');
             newRow = false;
         }
-        var nameHistory = events[i].title;
-        nameHistory = nameHistory.replace(" ", "_").toLocaleLowerCase();
+        var nameHistory = "";
+        var performers = events[i].performers;
+        console.log(events[i].performers);
+        if(performers !== null  && performers.length > 0){
+            if(performers[0] !== null) {
+                nameHistory = performers[0].name;
+            }
+            else{
+                nameHistory = events[i].title;
+            }
+        }
+        else{
+            nameHistory = events[i].title;
+        }
+        nameHistory = nameHistory.replace(/[^\w0-9]/gi, "_")
+        nameHistory = nameHistory.trim().toLocaleLowerCase();
         container.append(
              ' <div class="col-sm-3" >'+
                   '<figure class="wow fadeInLeft animated portfolio-item" data-wow-duration="500ms" data-wow-delay="0ms">'+
