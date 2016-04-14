@@ -64,13 +64,14 @@ function loadSearchOptions(){
 function getEventsbyLocation(page, isPaginatorInit) {
     //Clean the container
     var container = $("#eventsResult");
+    var location = $("#txtSearchInput").val();
     $("#txtTypeSearch").val("location");
     container.empty();
     $.ajax({
-        type: "GET",
-        url: "/location/" + page,
+        type: "POST",
+        url: "/location/" + page+ "/",
         dataType: 'json',
-        data: JSON.stringify({})
+        data: {"location": location}
     })
     // this is a callback function which is triggered when the request has completed and appends the data to the row div
     .done(function (data) {
@@ -216,6 +217,7 @@ function renderEvents(data, isPaginatorInit){
  * @param totalPages Number representing the total of pages of the search
  */
 function initializePaginator(totalPages){
+
     $('#paginator').twbsPagination({
         totalPages: totalPages,
         visiblePages: 5,

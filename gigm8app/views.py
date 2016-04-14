@@ -59,7 +59,9 @@ def history(request, artist_name):
 
 #Script to get events by location search
 def EventsbyLocation(request,page):
-    data=getEventsbyLocation(request,page)
+    location = request.POST["location"]
+    data=getEventsbyLocation(request,page,location)
+    logger.debug("location: " + location)
     return HttpResponse(json.dumps(data))
 
 

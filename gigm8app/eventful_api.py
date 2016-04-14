@@ -17,9 +17,9 @@ WITHIN_DISTANCE = 20
 UNIT_DISTANCE = "km"
 
 ##Script to get events by location search
-def getEventsbyLocation(request,page):
+def getEventsbyLocation(request,page,location):
 
-    location="Finland" #can be sent from frontend
+
     pageNumber = page
     payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': location ,"within": 20, "unit": "km",
                "category": "music", "sort_order": "popularity", "page_size": PAGE_SIZE,
