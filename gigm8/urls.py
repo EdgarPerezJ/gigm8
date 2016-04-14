@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^index', views.index, name='index'),
     url(r'^events/', views.events),
     url(r'^history/(?P<artist_name>\w{0,50})/$', views.history),
+    url(r'^lastevents/(?P<armbid>[A-Za-z0-9\-]+)/$', views.last_events),
     url(r'^location/(?P<page>\d+)/', views.EventsbyLocation),
     url(r'^Details/', views.details),
     url(r'^getdetails/(?P<id>[\w{}.@-]{1,40})/$', views.EventDetails),

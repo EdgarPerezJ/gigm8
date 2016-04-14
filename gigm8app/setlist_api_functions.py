@@ -55,7 +55,9 @@ def youtube_song(song, art):
     text_to_search = unicodedata.normalize('NFKD', text_to_search).encode('ascii', 'ignore')
     query = urllib.quote(text_to_search)
     url = "https://www.youtube.com/results?search_query=" + query
-    response = urllib2.urlopen(url)
+    req = urllib2.Request(url)
+    req.add_header('User-Agent','Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0')
+    response = urllib2.urlopen(req)
     html = response.read()
     soup = BeautifulSoup(html, "html.parser")
     song_link = ''
@@ -80,7 +82,9 @@ def youtube_song_lyrics(song, art):
     text_to_search = unicodedata.normalize('NFKD', text_to_search).encode('ascii', 'ignore')
     query = urllib.quote(text_to_search)
     url = "https://www.youtube.com/results?search_query=" + query
-    response = urllib2.urlopen(url)
+    req = urllib2.Request(url)
+    req.add_header('User-Agent','Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0')
+    response = urllib2.urlopen(req)
     html = response.read()
     soup = BeautifulSoup(html, "html.parser")
     song_link = ''
@@ -325,7 +329,7 @@ def get_artist_by_name(name):
 """
 Function that returns musicbrainz info for a determined id
  - Input: musicbrainz artist id
- - Output: name, type, life-span, country and disambiguation
+ - Output: id, name, type, life-span, country and disambiguation
 """
 
 
@@ -357,7 +361,7 @@ def get_artist_info(mbid):
     disambiguation = False
     if any('disambiguation' in x for x in d):
         disambiguation = d['disambiguation']
-    artist_info = {'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation, 'g': gender}
+    artist_info = {'id': mbid, 'n': name, 'type': kind, 'c': country, 'life': life_span, 'd': disambiguation, 'g': gender}
     return artist_info
 
 

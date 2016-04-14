@@ -48,15 +48,62 @@
 			$(document).ready(function() {
 				var map;
 				function initialize() {
-				  var mapOptions = {
-					zoom: 4,
-					center: new google.maps.LatLng(51.509802, -0.086692),
-					mapTypeId: google.maps.MapTypeId.ROADMAP
-				  };
-				  map = new google.maps.Map(document.getElementById('divMap'),
-											mapOptions);
+                    var middle = {lat: 0.0, lng: 0.0};
+                    var mapOptions = {
+					    zoom: 1,
+					    center: middle,
+					    mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    map = new google.maps.Map(document.getElementById('divMap'), mapOptions);
+
+                    mbid = $( "#mbid").text();
+                    $.ajax({
+                        url: 'http://127.0.0.1:8000/lastevents/'+mbid,
+                        type: 'GET',
+                        success: function(data) {
+                            console.log(data);
+                            for (var i=0;i<data.length;i++){
+                                var id = data[i]['@id'];
+                                var name = data[i]['@name'];
+                                var lat = parseInt(data[i]['city']['coords']['@lat']);
+                                var long = parseInt(data[i]['city']['coords']['@long']);
+                                var coords = {lat: lat, lng: long};
+
+
+                                var contentString = '<div id="content">'+
+                                  '<div id="siteNotice">'+
+                                  '</div>'+
+                                  '<h1 id="firstHeading" class="firstHeading">'+ name +'</h1>'+
+                                  '<div id="bodyContent">'+
+                                  '<p></p>'+
+                                  '<p>Attribution: Uluru, <a href="'+ id +'">'+
+                                  'Link</a> '+
+                                  '(last visited June 22, 2009).</p>'+
+                                  '</div>'+
+                                  '</div>';
+
+                                var infowindow = new google.maps.InfoWindow({
+                                content: contentString
+                                });
+
+                                var marker = new google.maps.Marker({
+                                position: coords,
+                                map: map,
+                                title: name
+                                });
+                                marker.addListener('click', function() {
+                                infowindow.open(map, marker);
+                                });
+
+                            }
+                        }
+
+                    });
+
+
 				}
-				google.maps.event.addDomListener(window, 'load', initialize);
+                google.maps.event.addDomListener(window, 'load', initialize);
+
 			});
 		</script>
 		
@@ -111,10 +158,17 @@
                 <div class="row">                    
                     <div class="col-md-12">
 						<div class="map-area">
+                            <p id="mbid" hidden>{{ artistInfo.id }}</p>
                             <h2 class="subtitle  wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".3s">{{ artistInfo.n }}</h2>
                             <p class="subtitle-des wow fadeInDown" data-wow-duration="500ms" data-wow-delay=".5s">
 								{% if artistInfo.type == 'Person' %}
-                                    A solo artist
+                                    A
+                                    {% if artistInfo.g == 'male' or artistInfo.g == 'Male'  %}
+                                            male
+                                        {% else %}
+                                            female
+                                        {% endif %}
+                                    artist
                                 {% else %}
                                     A band
                                 {% endif %}
@@ -122,17 +176,12 @@
                                     from {{ artistInfo.c }}
                                 {% endif %}
                                 {% if artistInfo.life %}
-                                    , that started
                                     {% if artistInfo.type == 'Person' %}
-                                        {% if artistInfo.g == 'male' or artistInfo.g == 'Male'  %}
-                                            his
-                                        {% else %}
-                                            her
-                                        {% endif %}
+                                        , born
                                     {% else %}
-                                        its
+                                        , that started its career
                                     {% endif %}
-                                    career back in {{ artistInfo.life.s }}
+                                    in {{ artistInfo.life.s }}
                                 {% endif %}
 
                             </p>

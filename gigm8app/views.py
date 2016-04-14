@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import logging
 import unicodedata
-from setlist_api_functions import get_artist_by_name, albums_of_songs
+from setlist_api_functions import get_artist_by_name, albums_of_songs, last_events_venues
 from setlist_api_functions import get_artist_info
 from setlist_api_functions import concerts_with_encored_songs
 from setlist_api_functions import popular_encored_songs
@@ -56,6 +56,12 @@ def history(request, artist_name):
             s['y'] = youtube_song(s['name'], artist_name)
     data = {'artistInfo': info, 'mostPlayed': m_p_d, 'albums': a_s, 'encorePercentage': e_p, 'popularEncored': p_e}
     return render(request, 'history.html', data)
+
+
+def last_events(request, armbid):
+    data = last_events_venues(armbid)
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
 
 #Script to get events by location search
 def EventsbyLocation(request,page):
