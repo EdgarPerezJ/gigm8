@@ -78,10 +78,9 @@ def get_events_geolocation(coordinates, page_number):
     return {"pageCount": int(json["page_count"]), "totalItems": int(json["total_items"]), "events": events}
 
 #Get the events by artist
-def eventsByArtist(request):
-    artistName = "The Horrors" #This will be a parameter from
+def get_artists(page, artistName):
     #First the artist need to be searched.
-    paramsArtist = { 'app_key': 'bdNbdBzr4dD6Ghr3', "keywords": artistName }
+    paramsArtist = { 'app_key': 'bdNbdBzr4dD6Ghr3', "keywords": artistName}
     r = requests.get('http://api.eventful.com/json/performers/search', params=paramsArtist)
     json = r.json()
     performer = json['performers']['performer'][0]
@@ -102,4 +101,4 @@ def eventsByArtist(request):
             events.append(jsonEvents['event'])
             i += 1
     #In this particular search we retrieve artists and also events from those artists.
-    return JsonResponse({"performer": performer, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events})
+    return {"performer": performer, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events}

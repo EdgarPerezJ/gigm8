@@ -74,3 +74,10 @@ def events_by_geolocation(request, latitude, longitude, page):
     geolocation = latitude +","+longitude
     info = eventful_api.get_events_geolocation(geolocation, page)
     return JsonResponse(info)
+
+#gets the artists by name
+def artist_by_name(request, page):
+    artistName = request.POST["artistName"]
+    logger.debug("Artist name: " + artistName)
+    info = eventful_api.get_artists(page, artistName)
+    return JsonResponse(info)

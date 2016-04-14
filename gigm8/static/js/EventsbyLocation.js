@@ -39,7 +39,7 @@ function searchEvents(){
         getEventsbyLocation(1, true);
     }
     else if(typeSearch === "byArtist"){
-        //Look for artist and it's events.
+        getArtistByName(1, true);
     }
 }
 
@@ -71,6 +71,29 @@ function getEventsbyLocation(page, isPaginatorInit) {
         url: "/location/" + page,
         dataType: 'json',
         data: JSON.stringify({})
+    })
+    // this is a callback function which is triggered when the request has completed and appends the data to the row div
+    .done(function (data) {
+        renderEvents(data, isPaginatorInit);
+    });
+}
+
+/**
+* Function to search artists
+* @param page Number representing the page to get from the API
+ * @param isPaginatorInit True is the paginator needs to be initialized
+*/
+function getArtistByName(page, isPaginatorInit) {
+    //Clean the container
+    var container = $("#eventsResult");
+    var artistName = $("#txtSearchInput").val();
+    $("#txtTypeSearch").val("location");
+    container.empty();
+    $.ajax({
+        type: "POST",
+        url: "/artist_name/" + page + "/",
+        dataType: 'json',
+        data: {"artistName": artistName}
     })
     // this is a callback function which is triggered when the request has completed and appends the data to the row div
     .done(function (data) {
@@ -138,7 +161,6 @@ function renderEvents(data, isPaginatorInit){
         }
         var nameHistory = "";
         var performers = events[i].performers;
-        console.log(events[i].performers);
         if(performers !== null  && performers.length > 0){
             if(performers[0] !== null) {
                 nameHistory = performers[0].name;
