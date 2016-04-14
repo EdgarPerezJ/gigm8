@@ -97,20 +97,18 @@ def youtube_song_lyrics(song, art):
 """
 Returns a list of the last 10 events´ venues info (only for the events that already have a setlist):
 {
-  "@id": "43d62307",
-  "@name": "Palacio de la Ópera",
-  "city": {
-    "@id": "3119841",
-    "@name": "Corunna",
-    "@state": "Galicia",
-    "@stateCode": "58",
-    "coords": {
-      "@lat": "43.371349638664",
-      "@long": "-8.39600086212158"
-    },
-    "country": {
-      "@code": "ES",
-      "@name": "Spain"
+    'id': id,
+    'date': date,
+    'name': '',
+    'city': {
+        "@id": "3119841",
+        "@name": "Corunna",
+        "@state": "Galicia",
+        "@stateCode": "58",
+        "coords": {
+          "@lat": "43.371349638664",
+          "@long": "-8.39600086212158"
+        }
     }
 }
 Input:
@@ -132,7 +130,11 @@ def last_events_venues(mbid):
             event_count -= 1
             if event_count == -1:
                 break
-            event = l['venue']
+            event = {'id': l['@id'],
+                     'date': l['@eventDate'],
+                     'name': l['venue']['@name'],
+                     'city': l['venue']['city']
+                     }
             event_list.append(event)
     return event_list
 
