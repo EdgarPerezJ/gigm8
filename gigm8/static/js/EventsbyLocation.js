@@ -269,7 +269,7 @@ function renderArtist(data){
         {
             imagesrc = artists[i].image.large.url
         }else{
-            imagesrc = '/static/images/portfolio/muse.jpg'
+            imagesrc = '/static/images/portfolio/no-picture.jpeg'
         }
         if(newRow){
             container.append('<div class="row">');
