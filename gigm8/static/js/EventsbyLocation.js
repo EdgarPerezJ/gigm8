@@ -285,6 +285,7 @@ function renderArtist(data){
                         '<div class="overlay">'+
                            ' <div class="buttons">'+
                                 '<a href="/history/' + nameHistory + '">History</a>' +
+                                '<a href="/artist/' + artists[i].id + '">Profile</a>' +
                            ' </div>'+
                         '</div>'+
                    ' </div>'+

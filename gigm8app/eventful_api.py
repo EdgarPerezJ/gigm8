@@ -15,13 +15,13 @@ IMAGE_SIZES = "large"
 WITHIN_DISTANCE = 20
 #Unit of the distance
 UNIT_DISTANCE = "km"
+#App_Key for the Eventful API.
+APP_KEY = "bdNbdBzr4dD6Ghr3"
 
 ##Script to get events by location search
 def getEventsbyLocation(request,page,location):
-
-
     pageNumber = page
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': location ,"within": 20, "unit": "km",
+    payload = {'app_key': APP_KEY, 'location': location ,"within": 20, "unit": "km",
                "category": "music", "sort_order": "popularity", "page_size": PAGE_SIZE,
                "page_number": pageNumber, "image_sizes": IMAGE_SIZES}
     r = requests.get('http://api.eventful.com/json/events/search', params=payload)
@@ -42,7 +42,7 @@ def getEventsbyLocation(request,page,location):
 # gets the details of one specific event
 def getEventDetails(request,id):
     eveid=id
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'id': eveid, "image_sizes": "large"}
+    payload = {'app_key': APP_KEY, 'id': eveid, "image_sizes": "large"}
     r = requests.get('http://api.eventful.com/json/events/get', params=payload)
     Json = r.json()
     data={
@@ -52,7 +52,7 @@ def getEventDetails(request,id):
 
 #Get the events by the geolocation
 def get_events_geolocation(coordinates, page_number):
-    payload = {'app_key': 'bdNbdBzr4dD6Ghr3', 'location': coordinates, "within": WITHIN_DISTANCE, "unit": UNIT_DISTANCE,
+    payload = {'app_key': APP_KEY, 'location': coordinates, "within": WITHIN_DISTANCE, "unit": UNIT_DISTANCE,
                "category": "music", "sort_order": "popularity", "page_size": PAGE_SIZE,
                "page_number": page_number, "image_sizes": IMAGE_SIZES}
     r = requests.get('http://api.eventful.com/json/events/search', params=payload)
@@ -80,31 +80,32 @@ def get_events_geolocation(coordinates, page_number):
 #Get the events by artist
 def get_artists(page, artistName):
     #First the artist need to be searched.
-    paramsArtist = { 'app_key': 'bdNbdBzr4dD6Ghr3', "keywords": artistName, "image_sizes": IMAGE_SIZES}
+    paramsArtist = { 'app_key': APP_KEY, "keywords": artistName, "image_sizes": IMAGE_SIZES}
     r = requests.get('http://api.eventful.com/json/performers/search', params=paramsArtist)
     json = r.json()
-    jsonEvents = []
     performers = []
     if json['performers'] is not None and isinstance(json['performers']['performer'], list):
         performers = json['performers']['performer']
-        performer = json['performers']['performer'][0]
-        performerId = performer['id']
-
-        #Then the events of that artist using it's ID should be retrieved.
-        pageNumber = 1
-        paramEvents = {'app_key': 'bdNbdBzr4dD6Ghr3', "id": performerId,"page_size": PAGE_SIZE,
-                   "page_number": pageNumber}
-        rEvents = requests.get('http://api.eventful.com/json/performers/events/list', params=paramEvents)
-        jsonEvents = rEvents.json()
-        eventCount = int(jsonEvents['event_count'])
-        events = []
-        logger.debug(jsonEvents)
-        if eventCount == 1:
-            events.append(jsonEvents['event'])
-        elif eventCount > 1:
-            for i in range(0, len(jsonEvents['event'])):
-                events.append(jsonEvents['event'])
-                i += 1
     #In this particular search we retrieve artists and also events from those artists.
-    #, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events
     return {"performers": performers}
+
+#Get the info of an artist
+def get_artist_by_id(artistId):
+    paramEvents = {'app_key': APP_KEY, "id": artistId,"show_events": True,
+               "image_sizes ": IMAGE_SIZES }
+    rPerformer = requests.get('http://api.eventful.com/json/performers/get', params=paramEvents)
+    jsonPerformer = rPerformer.json()
+    performerInfo = {}
+    performerInfo["name"] = jsonPerformer["name"]
+    performerInfo["short_bio"] = jsonPerformer["short_bio"]
+    performerInfo["long_bio"] = jsonPerformer["long_bio"]
+    performerInfo["event_count"] = jsonPerformer["event_count"]
+    srcImage = ""
+    if isinstance(jsonPerformer["images"]["image"], list):
+        image = jsonPerformer["images"]["image"][0]
+        srcImage = image["medium"]["url"]
+    else:
+        srcImage = jsonPerformer["images"]["image"]["medium"]["url"]
+    performerInfo["image"] = srcImage
+    performerInfo["events"] = jsonPerformer["events"]
+    return performerInfo

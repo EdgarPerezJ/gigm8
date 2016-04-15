@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^getdetails/(?P<id>[\w{}.@-]{1,40})/$', views.EventDetails),
     url(r'^events_geolocation/(?P<latitude>\-?\d*\.?\d+)/(?P<longitude>\-?\d*\.?\d+)/(?P<page>\d+)', views.events_by_geolocation),
     url(r'^artist_name/(?P<page>\d+)/', views.artist_by_name),
+    url(r'^artist/(?P<id>[\w{}.@-]{1,40})/$', views.artist_by_id),
     url(r'^admin/', include(admin.site.urls)),
 ]
