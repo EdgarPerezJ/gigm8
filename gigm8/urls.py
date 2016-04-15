@@ -21,6 +21,8 @@ from gigm8app import eventful_api
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^index', views.index, name='index'),
+    url(r'^about', views.about),
+    url(r'^contact', views.contact),
     url(r'^events/', views.events),
     url(r'^history/(?P<artist_name>\w{0,50})/$', views.history),
     url(r'^lastevents/(?P<armbid>[A-Za-z0-9\-]+)/$', views.last_events),

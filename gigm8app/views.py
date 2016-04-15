@@ -20,13 +20,17 @@ def index(request):
     logger.debug("*********Into index View*******")
     return render(request, 'index.html')
 
-
 def events(request):
     return render(request, 'events.html')
 
 def details(request):
     return render(request, 'details.html')
 
+def about(request):
+    return render(request, 'index.html')
+
+def contact(request):
+    return render(request, 'index.html')
 
 def history(request, artist_name):
     artist = artist_name.replace('_', ' ')
