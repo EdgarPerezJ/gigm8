@@ -80,25 +80,31 @@ def get_events_geolocation(coordinates, page_number):
 #Get the events by artist
 def get_artists(page, artistName):
     #First the artist need to be searched.
-    paramsArtist = { 'app_key': 'bdNbdBzr4dD6Ghr3', "keywords": artistName}
+    paramsArtist = { 'app_key': 'bdNbdBzr4dD6Ghr3', "keywords": artistName, "image_sizes": IMAGE_SIZES}
     r = requests.get('http://api.eventful.com/json/performers/search', params=paramsArtist)
     json = r.json()
-    performer = json['performers']['performer'][0]
-    performerId = performer['id']
+    jsonEvents = []
+    performers = []
+    if json['performers'] is not None and isinstance(json['performers']['performer'], list):
+        performers = json['performers']['performer']
+        performer = json['performers']['performer'][0]
+        performerId = performer['id']
 
-    #Then the events of that artist using it's ID should be retrieved.
-    pageNumber = 1
-    paramEvents = {'app_key': 'bdNbdBzr4dD6Ghr3', "id": performerId,"page_size": PAGE_SIZE,
-               "page_number": pageNumber}
-    rEvents = requests.get('http://api.eventful.com/json/performers/events/list', params=paramEvents)
-    jsonEvents = rEvents.json()
-    eventCount = int(jsonEvents['event_count'])
-    events = []
-    if eventCount == 1:
-        events.append(jsonEvents['event'])
-    else:
-        for i in range(0, len(jsonEvents['event'])):
+        #Then the events of that artist using it's ID should be retrieved.
+        pageNumber = 1
+        paramEvents = {'app_key': 'bdNbdBzr4dD6Ghr3', "id": performerId,"page_size": PAGE_SIZE,
+                   "page_number": pageNumber}
+        rEvents = requests.get('http://api.eventful.com/json/performers/events/list', params=paramEvents)
+        jsonEvents = rEvents.json()
+        eventCount = int(jsonEvents['event_count'])
+        events = []
+        logger.debug(jsonEvents)
+        if eventCount == 1:
             events.append(jsonEvents['event'])
-            i += 1
+        elif eventCount > 1:
+            for i in range(0, len(jsonEvents['event'])):
+                events.append(jsonEvents['event'])
+                i += 1
     #In this particular search we retrieve artists and also events from those artists.
-    return {"performer": performer, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events}
+    #, "pageCount": int(jsonEvents["page_count"]), "totalItems": int(jsonEvents["event_count"]), "events": events
+    return {"performers": performers}
