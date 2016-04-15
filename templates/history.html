@@ -50,7 +50,7 @@
 				function initialize() {
                     var middle = {lat: 0.0, lng: 0.0};
                     var mapOptions = {
-					    zoom: 1,
+					    zoom: 2,
 					    center: middle,
 					    mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
@@ -59,7 +59,7 @@
                     mbid = $( "#mbid").text();
                     var markers = [];
                     $.ajax({
-                        url: 'http://127.0.0.1:8000/lastevents/'+mbid,
+                        url: '/lastevents/'+mbid,
                         type: 'GET',
                         success: function(data) {
                             for (var i=0;i<data.length;i++){
