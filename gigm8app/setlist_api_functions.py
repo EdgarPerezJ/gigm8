@@ -122,20 +122,23 @@ def last_events_venues(mbid):
     url = 'http://api.setlist.fm/rest/0.1/artist/' + mbid + '/setlists.json?p=1'
     r = requests.get(url)
     d = json.loads(r.text)
-    event_count = 10
+    event_count = 20
     event_list = []
     setlists_list = d['setlists']['setlist']
     for l in setlists_list:
-        if l['sets'] != "":
-            event_count -= 1
-            if event_count == -1:
-                break
-            event = {'id': l['@id'],
-                     'date': l['@eventDate'],
-                     'name': l['venue']['@name'],
-                     'city': l['venue']['city']
-                     }
-            event_list.append(event)
+        if l['sets'] == "":
+            e = False
+        else:
+            e = l['@id']
+        event_count -= 1
+        if event_count == -1:
+            break
+        event = {'id': e,
+                 'date': l['@eventDate'],
+                 'name': l['venue']['@name'],
+                 'city': l['venue']['city']
+                 }
+        event_list.append(event)
     return event_list
 
 
