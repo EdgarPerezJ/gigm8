@@ -123,7 +123,7 @@ function getArtistByName(page, isPaginatorInit) {
             container.append(
                 '<div class="row">' +
                     ' <div class="col-sm-12 text-center" >' +
-                        "<h4 class='media-heading'>We didn't find any artist with this name :( </h4>" +
+                        "<h4 class='media-heading'>We didn't find any artist with these name :( </h4>" +
                     '</div>' +
                 '</div>'
             );
@@ -271,7 +271,7 @@ function renderArtist(data){
     container.append(
         '<div class="row">' +
             ' <div class="col-sm-12 text-center" >' +
-                '<h4 class="media-heading">We found this artists for you :) </h4>' +
+                '<h4 class="media-heading">We found these artists for you :) </h4>' +
             '</div>' +
         '</div>'
     );
