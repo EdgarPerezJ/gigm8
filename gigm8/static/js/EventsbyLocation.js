@@ -26,12 +26,12 @@ $(document).ready(function () {
 function searchEvents(){
     var typeSearch = $('.input-group #searchBy').val();
     if(typeSearch === "" || typeSearch === null){
-        console.log("No type of serach defined");
+        //console.log("No type of serach defined");
         return;
     }
     var inputSearch = $("#txtSearchInput").val();
     if(inputSearch === "" || inputSearch === null){
-        console.log("No input search provided");
+        //console.log("No input search provided");
         return;
     }
     if(typeSearch === "byCity"){
@@ -76,7 +76,19 @@ function getEventsbyLocation(page, isPaginatorInit) {
     })
     // this is a callback function which is triggered when the request has completed and appends the data to the row div
     .done(function (data) {
-        renderEvents(data, isPaginatorInit);
+            if(data['events'].length > 0){
+                renderEvents(data, isPaginatorInit);
+            }
+            else{
+                var container = $("#artistsResult")
+                container.append(
+                    '<div class="row">' +
+                        ' <div class="col-sm-12 text-center" >' +
+                            "<h4 class='media-heading'>We didn't find any event in that place :( </h4>" +
+                        '</div>' +
+                    '</div>'
+                );
+            }
     });
 }
 

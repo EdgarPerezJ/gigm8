@@ -16,7 +16,7 @@ WITHIN_DISTANCE = 20
 #Unit of the distance
 UNIT_DISTANCE = "km"
 #App_Key for the Eventful API.
-APP_KEY = "bdNbdBzr4dD6Ghr3"
+APP_KEY = "WgcWjcWZx2JnMdfH"
 
 ##Script to get events by location search
 def getEventsbyLocation(request,page,location):
@@ -84,8 +84,12 @@ def get_artists(page, artistName):
     r = requests.get('http://api.eventful.com/json/performers/search', params=paramsArtist)
     json = r.json()
     performers = []
-    if json['performers'] is not None and isinstance(json['performers']['performer'], list):
+    logger.debug(int(json["total_items"]))
+    #if json['performers'] is not None and isinstance(json['performers']['performer'], list):
+    if int(json["total_items"]) > 1:
         performers = json['performers']['performer']
+    elif int(json["total_items"]) == 1:
+        performers.append(json['performers']['performer'])
     #In this particular search we retrieve artists and also events from those artists.
     return {"performers": performers}
 
