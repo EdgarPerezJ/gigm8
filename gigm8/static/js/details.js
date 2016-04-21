@@ -69,7 +69,7 @@ function getEventsDetails(id){
                          '<p style="margin-left:100px">Performers: '+performer+'</p>'+
                          '<p style="margin-left:100px">Venue: '+data['venueName']+'</p>'+
                           '<p style="margin-left:100px">Date: '+data['date']+'</p>'+
-                          '<button type="button" class="btn btn-success" style="margin-left:100px">Buy Tickets!</button>'+
+                          '<a href="'+data['url']+'" target="_blank" type="button" class="btn btn-success" style="margin-left:100px">Buy Tickets!</a>'+
                      '</div>'+
                     '</div>'+
                     '<div style="margin-top:50px"><p>Description:</p><p style="margin-left:20px">'+description+'</p></div>'

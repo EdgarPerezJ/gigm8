@@ -46,7 +46,7 @@ def getEventDetails(request,id):
     r = requests.get('http://api.eventful.com/json/events/get', params=payload)
     Json = r.json()
     data={
-        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images']
+        'title':Json['title'],'description':Json['description'],'performer':Json['performers'],'venueName':Json['venue_name'],'date':Json['start_time'],'image':Json['images'],'url':Json['url']
     }
     return data
 
