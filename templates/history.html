@@ -63,10 +63,6 @@
                         success: function(data) {
                             for (var i=0;i<data.length;i++){
                                 var id = data[i]['id'];
-                                var setlist = 1;
-                                if(!id){
-                                    setlist = 0;
-                                }
                                 var name = data[i]['name'];
                                 var date = data[i]['date'];
                                 var city = data[i]['city']['@name'];
@@ -83,7 +79,7 @@
                                 google.maps.event.addListener(marker, 'click', (function(marker, i) {
                                     return function() {
                                         var contentString = "";
-                                        if(setlist){
+                                        if(markers[i][3]){
                                             contentString = '<div id="content">'+
                                             '<div id="siteNotice">'+
                                             '</div>'+
