@@ -440,13 +440,16 @@ def get_setlist(setlistid):
     outputInfo = ""
     setlists_list = d2['setlist']['sets']['set']
     songs_list = []
-    encore_list = []
-    for x in setlists_list:
-        if '@encore' not in x:
-            set_type = type(x['song'])
-            if set_type is list:
-                for ll in x['song']:
-                    songs_list.append(ll)
+    if len(setlists_list) == 2:
+        for x in setlists_list:
+            if '@encore' not in x:
+                set_type = type(x['song'])
+                if set_type is list:
+                    for ll in x['song']:
+                        songs_list.append(ll)
+    if len(setlists_list) == 1:
+        for ll in setlists_list['song']:
+            songs_list.append(ll)
     dict2 = {}
     for i in range(len(songs_list)):
         if type(songs_list[i]) is dict:
