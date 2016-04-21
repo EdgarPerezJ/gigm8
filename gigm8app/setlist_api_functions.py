@@ -432,3 +432,50 @@ def get_most_played_songs_by_artist(mbid):
     dict2 = sorted(dict2.items(), key=lambda x: x[1])
     dict2.reverse()
     return dict2
+
+def get_setlist(setlistid):
+    url2 = 'http://api.setlist.fm/rest/0.1/setlist/' + setlistid + '.json?p=1'
+    r2 = requests.get(url2)
+    d2 = json.loads(r2.text)
+    outputInfo = ""
+    setlists_list = d2['setlist']['sets']['set']
+    songs_list = []
+    encore_list = []
+    for x in setlists_list:
+        if '@encore' not in x:
+            set_type = type(x['song'])
+            if set_type is list:
+                for ll in x['song']:
+                    songs_list.append(ll)
+    dict2 = {}
+    for i in range(len(songs_list)):
+        if type(songs_list[i]) is dict:
+            if any(songs_list[i]['@name'] in d for d in dict2):
+                dict2[songs_list[i]['@name']] = dict2[songs_list[i]['@name']] + 1
+            else:
+                dict2[songs_list[i]['@name']] = 1
+            outputInfo = outputInfo + songs_list[i]['@name'] + "\n"
+    return dict2
+
+def get_setlist_encore(setlistid):
+    url2 = 'http://api.setlist.fm/rest/0.1/setlist/' + setlistid + '.json?p=1'
+    r2 = requests.get(url2)
+    d2 = json.loads(r2.text)
+    outputInfo = ""
+    setlists_list = d2['setlist']['sets']['set']
+    encore_list = []
+    for x in setlists_list:
+        if '@encore' in x:
+            set_type = type(x['song'])
+            if set_type is list:
+                for ll in x['song']:
+                    encore_list.append(ll)
+    dict2 = {}
+    for i in range(len(encore_list)):
+        if type(encore_list[i]) is dict:
+            if any(encore_list[i]['@name'] in d for d in dict2):
+                dict2[encore_list[i]['@name']] = dict2[encore_list[i]['@name']] + 1
+            else:
+                dict2[encore_list[i]['@name']] = 1
+            outputInfo = outputInfo + encore_list[i]['@name'] + "\n"
+    return dict2

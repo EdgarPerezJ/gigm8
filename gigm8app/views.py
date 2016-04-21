@@ -7,6 +7,8 @@ from setlist_api_functions import get_artist_info
 from setlist_api_functions import concerts_with_encored_songs
 from setlist_api_functions import popular_encored_songs
 from setlist_api_functions import youtube_song
+from setlist_api_functions import get_setlist
+from setlist_api_functions import get_setlist_encore
 from setlist_api_functions import get_most_played_songs_by_artist
 from eventful_api import getEventDetails
 from eventful_api import getEventsbyLocation
@@ -98,3 +100,25 @@ def artist_by_id(request, id):
     info = eventful_api.get_artist_by_id(id)
     return render(request, 'profile.html', info)
     #return JsonResponse(info)
+
+def setlist(request, artist_name, setlistid):
+    # Get setlist
+    raw_set_list = get_setlist(setlistid)
+    setlist = []
+    for s in raw_set_list:
+        sf = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+        setlist.append(sf)
+    setlist_d = []
+    for s in setlist:
+        setlist_d.append({'n': s, 'y': youtube_song(s, artist_name)})
+
+    raw_set_list_encore = get_setlist_encore(setlistid)
+    setlist_encore = []
+    for s in raw_set_list_encore:
+        sf = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+        setlist_encore.append(sf)
+    setlist_d_encore = []
+    for s in setlist_encore:
+        setlist_d_encore.append({'n': s, 'y': youtube_song(s, artist_name)})
+    data = {'setlist': setlist_d, 'setlist_encore': setlist_d_encore}
+    return render(request, 'setlist.html', data)
