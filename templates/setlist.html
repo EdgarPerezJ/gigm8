@@ -107,18 +107,22 @@
                                 </li>
                                 {% endfor %}
                             </ol>
-                            <h3>Encore songs</h3>
-                                <ol>
-                                    {% for ps in setlist_encore %}
-                                    <li>
-                                        {{ ps.n }}
-                                        <a target="_blank" href={{ ps.y }}>
-                                                <i class="ion-ios-play-outline"
-                                                   style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
-                                        </a>
-                                    </li>
-                                    {% endfor %}
-                                </ol>
+                            {% if setlist_encore|length > 0 %}
+                                <h3>Encore songs</h3>
+                                    <ol>
+                                        {% for ps in setlist_encore %}
+                                        <li>
+                                            {{ ps.n }}
+                                            <a target="_blank" href={{ ps.y }}>
+                                                    <i class="ion-ios-play-outline"
+                                                       style="font-size: 170%;position: relative;top: 5px; left: 10px;"></i>
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ol>
+                            {% else %}
+                                <h3>No Encore songs</h3>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

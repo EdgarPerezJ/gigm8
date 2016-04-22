@@ -440,7 +440,7 @@ def get_setlist(setlistid):
     outputInfo = ""
     setlists_list = d2['setlist']['sets']['set']
     songs_list = []
-    if len(setlists_list) == 2:
+    if len(setlists_list) > 1:
         for x in setlists_list:
             if '@encore' not in x:
                 set_type = type(x['song'])
